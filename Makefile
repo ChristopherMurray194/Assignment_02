@@ -26,7 +26,7 @@ LFLAGS =
 LIBS = -lstdc++ -lGL -lGLEW -lSDL2
 
 # define the C source files
-SRCS = main.cpp
+SRCS = main.cpp SphereAsset.cpp LoadShader.cpp
 
 # define the C object files 
 #
@@ -50,7 +50,7 @@ MAIN = assignment
 .PHONY: depend clean
 
 all:    $(MAIN)
-		@echo  Simple Assignment has compiled successfully
+		@echo  Assignment has compiled successfully
 
 $(MAIN): $(OBJS) 
 		$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)

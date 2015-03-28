@@ -1,13 +1,16 @@
 #define GLEW_STATIC // Easier debugging
-#include <GL/gl.h>
+#include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <memory>
 
-#include <boost/program_options.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 
 #define RUN_GRAPHICS_DISPLAY 0x00;
 
+#include "SphereAsset.h"
+#include "LoadShader.h"
 
 /*
  * SDL timers run in separate threads.  In the timer thread
@@ -34,19 +37,24 @@ struct SDLWindowDeleter {
   }
 };
 
-void Draw(const std::shared_ptr<SDL_Window> window) {
+void Draw(const boost::shared_ptr<SDL_Window> window, boost::shared_ptr<SphereAsset> sphere_asset) {
   glClearColor(0.0f, 0.3f, 0.7f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+  boost::shared_ptr<LoadShader> ldShader = boost::make_shared<LoadShader>();
+  GLint program_token = ldShader->getProgram_token();
+
+  sphere_asset->Draw(program_token);
 
   // Don't forget to swap the buffers
   SDL_GL_SwapWindow(window.get());
 }
 
-std::shared_ptr<SDL_Window> InitWorld() {
+boost::shared_ptr<SDL_Window> InitWorld() {
   Uint32 width = 640;
   Uint32 height = 480;
   SDL_Window * _window;
-  std::shared_ptr<SDL_Window> window;
+  boost::shared_ptr<SDL_Window> window;
 
   // Glew will later ensure that OpenGL 3 *is* supported
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -100,6 +108,7 @@ int main(int argc, char ** argv) {
   Uint32 delay = 1000/60; // in milliseconds
 
   auto window = InitWorld();
+  auto sphere_asset = boost::make_shared<SphereAsset>();
 
   if(!window) {
     SDL_Quit();
@@ -126,7 +135,7 @@ int main(int argc, char ** argv) {
       SDL_Quit();
       break;
     case SDL_USEREVENT:
-      Draw(window);
+      Draw(window, sphere_asset);
 
       break;
     default:
