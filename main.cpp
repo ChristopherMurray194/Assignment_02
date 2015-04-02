@@ -9,8 +9,7 @@
 
 #define RUN_GRAPHICS_DISPLAY 0x00;
 
-#include "SphereAsset.h"
-#include "LoadShader.h"
+#include "GameManager.h"
 
 /*
  * SDL timers run in separate threads.  In the timer thread
@@ -37,14 +36,11 @@ struct SDLWindowDeleter {
   }
 };
 
-void Draw(const boost::shared_ptr<SDL_Window> window, boost::shared_ptr<SphereAsset> sphere_asset) {
+void Draw(const boost::shared_ptr<SDL_Window> window, boost::shared_ptr<GameManager> game_manager) {
   glClearColor(0.0f, 0.3f, 0.7f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-  boost::shared_ptr<LoadShader> ldShader = boost::make_shared<LoadShader>();
-  GLint program_token = ldShader->getProgram_token();
-
-  sphere_asset->Draw(program_token);
+  game_manager->Draw();
 
   // Don't forget to swap the buffers
   SDL_GL_SwapWindow(window.get());
@@ -88,10 +84,17 @@ boost::shared_ptr<SDL_Window> InitWorld() {
     return nullptr;
   }
 
-  SDL_GLContext glContext = SDL_GL_CreateContext(_window);
+  SDL_GLContext glContext = SDL_GL_CreateContext(_window);	// Create OpenGL context
   if (!glContext) {
     std::cout << "Failed to create OpenGL context: " << SDL_GetError() << std::endl;
     return nullptr;
+  }
+
+  glewInit();
+  if(!glewIsSupported("GL_VERSION_3_0"))
+  {
+	  std::cerr << "OpenGL 3.0 not available" << std::endl;
+	  return nullptr;
   }
 
   // OpenGL settings
@@ -104,11 +107,11 @@ boost::shared_ptr<SDL_Window> InitWorld() {
 }
 
 
-int main(int argc, char ** argv) {
+int main(int argc, char *argv[]) {
   Uint32 delay = 1000/60; // in milliseconds
 
   auto window = InitWorld();
-  auto sphere_asset = boost::make_shared<SphereAsset>();
+  auto game_manager = boost::make_shared<GameManager>();
 
   if(!window) {
     SDL_Quit();
@@ -135,11 +138,12 @@ int main(int argc, char ** argv) {
       SDL_Quit();
       break;
     case SDL_USEREVENT:
-      Draw(window, sphere_asset);
+      Draw(window, game_manager);
 
       break;
     default:
       break;
     }
   }
+  return 0;
 }

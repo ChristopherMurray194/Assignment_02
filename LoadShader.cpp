@@ -9,7 +9,7 @@
 
 LoadShader::LoadShader() {
 	std::string vertex_shader("shaders/vertexShader.vs");
-	std::string fragment_shader("shaders/fragment shader.fs");
+	std::string fragment_shader("shaders/fragmentShader.fs");
 
 	program_token = LoadShaders(vertex_shader.c_str(), fragment_shader.c_str());
 }
@@ -98,7 +98,7 @@ GLuint LoadShader::LoadShaders(const char * vertex_file_path,const char * fragme
 	}
 
 	// Shaders compiled successfully.
-	std::cout << "Shaders compiled successfully.";
+	std::cout << "Shaders compiled successfully." << std::endl;
 
 	// link the program
 	std::cout << "Linking the program." << std::endl;
