@@ -10,6 +10,7 @@
 #define RUN_GRAPHICS_DISPLAY 0x00;
 
 #include "GameManager.h"
+#include "Camera.h"
 
 /*
  * SDL timers run in separate threads.  In the timer thread
@@ -36,7 +37,7 @@ struct SDLWindowDeleter {
   }
 };
 
-void Draw(const boost::shared_ptr<SDL_Window> window, boost::shared_ptr<GameManager> game_manager) {
+void Draw(const boost::shared_ptr<SDL_Window> window, boost::shared_ptr<GameManager> game_manager, bool mouseIn) {
   glClearColor(0.0f, 0.3f, 0.7f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -112,6 +113,9 @@ int main(int argc, char *argv[]) {
 
   auto window = InitWorld();
   auto game_manager = boost::make_shared<GameManager>();
+  auto camera_ptr =   boost::make_shared<Camera>();
+
+  bool mouseIn = GL_FALSE;	// mouse cursor within window boundaries?
 
   if(!window) {
     SDL_Quit();
@@ -126,6 +130,36 @@ int main(int argc, char *argv[]) {
     // Get key presses
     case SDL_KEYDOWN:
     	switch(event.key.keysym.sym){
+    	case SDLK_w:
+    		// move camera forward when pressed
+    		camera_ptr->forward();
+    		break;
+    	case SDLK_a:
+			// move camera forward when pressed
+			camera_ptr->left();
+			break;
+    	case SDLK_s:
+			// move camera forward when pressed
+			camera_ptr->backward();
+			break;
+    	case SDLK_d:
+			// move camera forward when pressed
+			camera_ptr->right();
+			break;
+    	case SDLK_q:
+    		camera_ptr->rotLeft();
+    		break;
+    	case SDLK_e:
+    		camera_ptr->rotRight();
+    		break;
+    	case SDLK_x:
+			// move camera forward when pressed
+			camera_ptr->up();
+			break;
+    	case SDLK_c:
+			// move camera forward when pressed
+			camera_ptr->down();
+			break;
     	case SDLK_ESCAPE:
     		// Exit game
     		exit(0);
@@ -138,7 +172,7 @@ int main(int argc, char *argv[]) {
       SDL_Quit();
       break;
     case SDL_USEREVENT:
-      Draw(window, game_manager);
+      Draw(window, game_manager, mouseIn);
 
       break;
     default:

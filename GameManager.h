@@ -15,6 +15,7 @@
 
 #include "SphereAsset.h"
 #include "LoadShader.h"
+#include "Camera.h"
 
 class GameManager {
 public:
@@ -25,7 +26,8 @@ public:
 
 private:
 	boost::shared_ptr<SphereAsset> sphere_asset = boost::make_shared<SphereAsset>();
-	boost::shared_ptr<LoadShader> load_shader = boost::make_shared<LoadShader>();
+	boost::shared_ptr<LoadShader> load_shader   = boost::make_shared<LoadShader>();
+	boost::shared_ptr<Camera> camera_ptr        = boost::make_shared<Camera>();
 
 	/**
 	 * Get the program token from load shader

@@ -25,5 +25,8 @@ GLint GameManager::getProgramToken()
 void GameManager::Draw()
 {
 	sphere_asset->Draw(getProgramToken());
+
+	// Add the camera (view matrix to be passed to the vertex shader
+	camera_ptr->camera(getProgramToken());
 }
 
