@@ -2,6 +2,7 @@
 
 in vec3 position;
 uniform mat4 camera;
+uniform mat4 model_matrix;
 
 mat4 projection(
 	float angle_of_view_y,
@@ -48,15 +49,10 @@ mat4 rotate_y(float theta)
 		);
 }
 
-mat4 model()
-{
-	return rotate_x(90.0) * translate(0.0, 0.0, -1.0);
-}
-
 void main()
 {
 	gl_Position = projection(radians(45.0), 4.0/3.0, -0.1, -1000.0)
 					* camera 	// view matrix
-					* model()
+					* model_matrix	// Model matrix
 					* vec4(position, 1.0f);
 }

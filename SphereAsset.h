@@ -16,6 +16,7 @@
 #include <cmath>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/ext.hpp> // glm::translate
 
 #include "GameAsset.h"
 
@@ -25,8 +26,15 @@ public:
 	 * Algorithm for creating stacked sphere from http://www.gamedev.net/topic/350823-rendering-a-sphere-using-triangle-strips/ - (user: Enigma's answer)
 	 *
 	 * Create a stacked sphere
+	 *
+	 * @param radius - radius of sphere (determines size)
+	 * @param stacks - number of stacks (verticle segments)
+	 * @param slices - number of slices (horizontal segments)
+	 * @param x_pos - x position (Default: 0.0)
+	 * @param y_pos - y position (Default: 0.0)
+	 * @param z_pos - z position (Default: 1.0)
 	 */
-	SphereAsset(GLfloat, GLuint, GLuint);
+	SphereAsset(GLfloat, GLuint, GLuint, GLfloat x_pos = 0.0, GLfloat y_pos = 0.0, GLfloat z_pos = 1.0);
 	virtual ~SphereAsset();
 
 	/**
@@ -43,10 +51,26 @@ private:
 	GLuint elementbuffer;			// This will identify the element buffer
 	GLuint element_buffer_length;	// This will store the length of the element buffer
 
+	GLfloat x_pos, y_pos, z_pos;		// Position variables to be passed to vertex_shader
+
+	GLfloat rotate_angle = 0.0;
+
 	/**
 	 * Normalise the given vertex
 	 */
 	void normalise(GLfloat, GLfloat, GLfloat, std::vector<GLfloat>&);
+
+	/**
+	 * rotate on the x axis
+	 * @param angle of rotation
+	 */
+	glm::mat4 rotate_x(GLfloat);
+
+	/**
+	 * rotate on the y axis
+	 * @param angle of rotation
+	 */
+	glm::mat4 rotate_y(GLfloat);
 };
 
 #endif /* SPHEREASSET_H_ */

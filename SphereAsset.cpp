@@ -7,8 +7,13 @@
 
 #include "SphereAsset.h"
 
-SphereAsset::SphereAsset(GLfloat radius, GLuint stacks, GLuint slices)
+SphereAsset::SphereAsset(GLfloat radius, GLuint stacks, GLuint slices, GLfloat x_pos, GLfloat y_pos, GLfloat z_pos)
 {
+	// Assign the new positions
+	this->x_pos = x_pos;
+	this->y_pos = y_pos;
+	this->z_pos = z_pos;
+
 	const GLfloat PI = 3.1415926535;	// define PI
 
 	std::vector<GLfloat> vertices;
@@ -86,8 +91,43 @@ void SphereAsset::normalise(GLfloat vx, GLfloat vy, GLfloat vz, std::vector<GLfl
 	}
 }
 
+glm::mat4 SphereAsset::rotate_x(GLfloat theta)
+{
+	return glm::mat4(
+			glm::vec4(1.0, 0.0, 0.0, 0.0),
+			glm::vec4(0.0, cos(theta), sin(theta), 0.0),
+			glm::vec4(0.0, -sin(theta), cos(theta), 0.0),
+			glm::vec4(0.0, 0.0, 0.0, 1.0)
+		);
+}
+
+glm::mat4 SphereAsset::rotate_y(float theta)
+{
+	return glm::mat4(
+			glm::vec4(cos(theta), 0.0, -sin(theta), 0.0),
+			glm::vec4(0.0, 1.0, 0.0, 0.0),
+			glm::vec4(sin(theta), 0.0, cos(theta), 0.0),
+			glm::vec4(0.0, 0.0, 0.0, 1.0)
+		);
+}
+
 void SphereAsset::Draw(GLuint program_token)
 {
+	if(rotate_angle >= 0.0)
+	{
+		rotate_angle++;
+	}
+	else if(rotate_angle > 360.0)
+	{
+		rotate_angle = 0.0;
+	}
+
+	// create model matrix
+	glm::mat4 model_matrix = rotate_y(glm::radians(rotate_angle)) * rotate_x(glm::radians(90.0)) *  glm::translate(glm::mat4(1.0f), glm::vec3(-x_pos, -y_pos, -z_pos));
+
+	GLuint model_attrib = glGetUniformLocation(program_token, "model_matrix");
+	// Send camera matrix to vertex shader
+	glUniformMatrix4fv(model_attrib, 1, GL_FALSE, &model_matrix[0][0]);
 
 	GLuint position_attrib = glGetAttribLocation(program_token, "position");
 
