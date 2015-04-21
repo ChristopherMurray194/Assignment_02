@@ -11,7 +11,8 @@ LoadShader::LoadShader() {
 	std::string vertex_shader("shaders/vertexShader.vs");
 	std::string fragment_shader("shaders/fragmentShader.fs");
 
-	program_token = LoadShaders(vertex_shader.c_str(), fragment_shader.c_str());
+	program_token = LoadShaders(vertex_shader.c_str(),
+								fragment_shader.c_str());
 }
 
 LoadShader::~LoadShader() {
@@ -43,7 +44,9 @@ std::string LoadShader::readShader(const char* filePath)
 }
 
 
-GLuint LoadShader::LoadShaders(const char * vertex_file_path,const char * fragment_file_path)
+GLuint LoadShader::LoadShaders(
+							const char * vertex_file_path,
+							const char * fragment_file_path)
 {
 	// Create the shaders
 	GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -51,6 +54,7 @@ GLuint LoadShader::LoadShaders(const char * vertex_file_path,const char * fragme
 
 	std::string vertexShaderStr = readShader(vertex_file_path);
 	std::string fragmentShaderStr = readShader(fragment_file_path);
+
 	const char * vertexSource = vertexShaderStr.c_str();
 	const char * fragmentSource = fragmentShaderStr.c_str();
 

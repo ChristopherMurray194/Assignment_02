@@ -15,39 +15,38 @@
 #include <vector>
 #include <cmath>
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
-class SphereAsset {
+#include "GameAsset.h"
+
+class SphereAsset : public GameAsset{
 public:
-	SphereAsset();
+	/**
+	 * Algorithm for creating stacked sphere from http://www.gamedev.net/topic/350823-rendering-a-sphere-using-triangle-strips/ - (user: Enigma's answer)
+	 *
+	 * Create a stacked sphere
+	 */
+	SphereAsset(GLfloat, GLuint, GLuint);
 	virtual ~SphereAsset();
 
-	/**
-	 * Subdivide the given triangle (as vertices)
-	 *
-	 * Reference:
-	 * 	from http://stackoverflow.com/questions/26790422/recursive-subdivision-on-octahedron-in-opengl (answer (user: Reto Koradi))
-	 */
-	void subDivide(
-					GLfloat, GLfloat, GLfloat,
-					GLfloat, GLfloat, GLfloat,
-					GLfloat, GLfloat, GLfloat,
-					GLint
-				   );
 	/**
 	 * Draws sphere asset
 	 *
 	 * @param - takes program to use as parameter
 	 */
-	void Draw(GLuint);
+	virtual void Draw(GLuint);
 
 private:
 	GLuint VertexArrayID;
 	GLuint vertexbuffer;			// This will identify the vertex buffer
+	GLuint normalsbuffer;			// This will identify the normals buffer
 	GLuint elementbuffer;			// This will identify the element buffer
-	GLuint element_buffer_length;	// This will identify the length of the element buffer
+	GLuint element_buffer_length;	// This will store the length of the element buffer
 
-	const GLfloat PI = 3.1415926535;	// define PI
-
+	/**
+	 * Normalise the given vertex
+	 */
+	void normalise(GLfloat, GLfloat, GLfloat, std::vector<GLfloat>&);
 };
 
 #endif /* SPHEREASSET_H_ */

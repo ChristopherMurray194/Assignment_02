@@ -9,25 +9,35 @@
 #define GAMEMANAGER_H_
 
 #include <iostream>
+#include <vector>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 
-#include "SphereAsset.h"
+#include "GameAsset.h"
 #include "LoadShader.h"
-#include "Camera.h"
 
 class GameManager {
 public:
 	GameManager();
 	virtual ~GameManager();
 
+	/**
+	 * Add an asset to the game
+	 *
+	 * @param asset to be added so it can be drawn
+	 */
+	void AddAsset(boost::shared_ptr<GameAsset>);
+
+	/**
+	 * Draw the assets
+	 */
 	void Draw();
 
 private:
-	boost::shared_ptr<SphereAsset> sphere_asset = boost::make_shared<SphereAsset>();
 	boost::shared_ptr<LoadShader> load_shader   = boost::make_shared<LoadShader>();
-	boost::shared_ptr<Camera> camera_ptr        = boost::make_shared<Camera>();
+
+	std::vector<boost::shared_ptr<GameAsset> > draw_list;	// List of assets to be drawn
 
 	/**
 	 * Get the program token from load shader

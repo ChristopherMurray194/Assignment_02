@@ -9,7 +9,7 @@
 
 #define RUN_GRAPHICS_DISPLAY 0x00;
 
-#include "GameManager.h"
+#include "GameWorld.h"
 #include "Camera.h"
 
 /*
@@ -37,11 +37,11 @@ struct SDLWindowDeleter {
   }
 };
 
-void Draw(const boost::shared_ptr<SDL_Window> window, boost::shared_ptr<GameManager> game_manager, bool mouseIn) {
+void Draw(const boost::shared_ptr<SDL_Window> window, boost::shared_ptr<GameWorld> game_world) {
   glClearColor(0.0f, 0.3f, 0.7f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-  game_manager->Draw();
+  game_world->Draw();
 
   // Don't forget to swap the buffers
   SDL_GL_SwapWindow(window.get());
@@ -100,6 +100,8 @@ boost::shared_ptr<SDL_Window> InitWorld() {
 
   // OpenGL settings
   glDisable(GL_CULL_FACE);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 
@@ -112,10 +114,8 @@ int main(int argc, char *argv[]) {
   Uint32 delay = 1000/60; // in milliseconds
 
   auto window = InitWorld();
-  auto game_manager = boost::make_shared<GameManager>();
-  auto camera_ptr =   boost::make_shared<Camera>();
-
-  bool mouseIn = GL_FALSE;	// mouse cursor within window boundaries?
+  auto game_world = boost::make_shared<GameWorld>();
+  auto camera_ptr = boost::make_shared<Camera>();
 
   if(!window) {
     SDL_Quit();
@@ -172,7 +172,7 @@ int main(int argc, char *argv[]) {
       SDL_Quit();
       break;
     case SDL_USEREVENT:
-      Draw(window, game_manager, mouseIn);
+      Draw(window, game_world);
 
       break;
     default:

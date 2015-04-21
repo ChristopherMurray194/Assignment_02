@@ -21,7 +21,9 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-class Camera {
+#include "GameAsset.h"
+
+class Camera : public GameAsset{
 public:
 	Camera();
 	virtual ~Camera();
@@ -85,7 +87,7 @@ public:
 	   * @bug The camera's rotation does not function correctly once the cursor leaves the window.
 	   * @param program to send camera to
 	   */
-	  void camera(GLuint program_token);
+	  virtual void Draw(GLuint);
 
 private:
 	  // define PI

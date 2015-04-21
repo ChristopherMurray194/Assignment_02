@@ -50,7 +50,7 @@ mat4 rotate_y(float theta)
 
 mat4 model()
 {
-	return translate(0.0, 0.0, -1.0);
+	return rotate_x(90.0) * translate(0.0, 0.0, -1.0);
 }
 
 void main()

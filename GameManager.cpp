@@ -22,11 +22,15 @@ GLint GameManager::getProgramToken()
 	return program_token;
 }
 
-void GameManager::Draw()
+void GameManager::AddAsset(boost::shared_ptr<GameAsset> asset)
 {
-	sphere_asset->Draw(getProgramToken());
-
-	// Add the camera (view matrix to be passed to the vertex shader
-	camera_ptr->camera(getProgramToken());
+	draw_list.push_back(asset);	// Add the asset to the draw list
 }
 
+void GameManager::Draw()
+{
+	for(auto ga : draw_list)
+	{
+		ga->Draw(getProgramToken());	// Draw all the assets
+	}
+}

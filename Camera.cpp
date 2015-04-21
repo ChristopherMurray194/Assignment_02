@@ -8,7 +8,7 @@
 #include "Camera.h"
 
 	GLfloat x =  0.0;	///< camera position x
-	GLfloat y =  0.0;	///< camera position y
+	GLfloat y =  1.0;	///< camera position y
 	GLfloat z = 5.0;	///< camera position z
 
 Camera::Camera() {
@@ -113,7 +113,7 @@ void Camera::mouseMovement(GLfloat mouseX, GLfloat mouseY, bool mouseIn)
 	}*/
 }
 
-void Camera::camera(GLuint program_token)
+void Camera::Draw(GLuint program_token)
 {
 	// create camera matrix
 	glm::mat4 camera = glm::translate(glm::mat4(1.0f), glm::vec3(-x, -y, -z));
