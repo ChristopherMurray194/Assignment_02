@@ -14,8 +14,6 @@
 #ifndef CAMERA_H_
 #define CAMERA_H_
 
-#include <memory>
-
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <glm/glm.hpp>
@@ -25,6 +23,9 @@
 
 class Camera : public GameAsset{
 public:
+	/**
+	 * Camera movement logic from http://www.swiftless.com/tutorials/opengl/camera.html
+	 */
 	Camera();
 	virtual ~Camera();
 

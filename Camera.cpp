@@ -55,12 +55,16 @@ void Camera::right()
 
 void Camera::up()
 {
+	GLfloat y_radians = (y/180 * PI);
 
+	y += GLfloat(cos(y_radians)) * 0.2;
 }
 
 void Camera::down()
 {
+	GLfloat y_radians = (y/180 * PI);
 
+	y -= GLfloat(cos(y_radians)) * 0.2;
 }
 
 void Camera::rotLeft()

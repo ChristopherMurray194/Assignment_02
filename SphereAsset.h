@@ -17,6 +17,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp> // glm::translate
+#include <SOIL/SOIL.h>
 
 #include "GameAsset.h"
 
@@ -30,11 +31,12 @@ public:
 	 * @param radius - radius of sphere (determines size)
 	 * @param stacks - number of stacks (verticle segments)
 	 * @param slices - number of slices (horizontal segments)
+	 * @param texture_file_path - path to the texture to be loaded
 	 * @param x_pos - x position (Default: 0.0)
 	 * @param y_pos - y position (Default: 0.0)
 	 * @param z_pos - z position (Default: 1.0)
 	 */
-	SphereAsset(GLfloat, GLuint, GLuint, GLfloat x_pos = 0.0, GLfloat y_pos = 0.0, GLfloat z_pos = 1.0);
+	SphereAsset(const GLfloat, const GLuint, const GLuint, const char*, GLfloat x_pos = 0.0, GLfloat y_pos = 0.0, GLfloat z_pos = 1.0);
 	virtual ~SphereAsset();
 
 	/**
@@ -47,13 +49,16 @@ public:
 private:
 	GLuint VertexArrayID;
 	GLuint vertexbuffer;			// This will identify the vertex buffer
-	GLuint normalsbuffer;			// This will identify the normals buffer
+	GLuint texturebuffer;			// This will identify the texture buffer
+	GLuint normalbuffer;			// This will identify the normals buffer
 	GLuint elementbuffer;			// This will identify the element buffer
 	GLuint element_buffer_length;	// This will store the length of the element buffer
 
-	GLfloat x_pos, y_pos, z_pos;		// Position variables to be passed to vertex_shader
+	GLuint texture;					// This will identify the texture used
 
-	GLfloat rotate_angle = 0.0;
+	GLfloat x_pos, y_pos, z_pos;	// Position variables to be passed to vertex_shader
+
+	GLfloat rotate_angle = 0.0;		// This is the rotation angle
 
 	/**
 	 * Normalise the given vertex

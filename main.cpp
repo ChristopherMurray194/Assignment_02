@@ -41,6 +41,13 @@ void Draw(const boost::shared_ptr<SDL_Window> window, boost::shared_ptr<GameWorl
   glClearColor(0.0f, 0.3f, 0.7f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
+  GLfloat green[] = {0.0, 1.0, 0.0, 1.0};
+  GLfloat white[] = {1.0, 1.0, 1.0, 1.0};
+  glMaterialfv(GL_FRONT, GL_AMBIENT, green);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, green);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, white);
+  glMaterialf(GL_FRONT, GL_SHININESS, 60.0);
+
   game_world->Draw();
 
   // Don't forget to swap the buffers
@@ -99,11 +106,21 @@ boost::shared_ptr<SDL_Window> InitWorld() {
   }
 
   // OpenGL settings
-  glDisable(GL_CULL_FACE);
-  glEnable(GL_LIGHTING);
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_LIGHTING);	// Enable lighting
   glEnable(GL_LIGHT0);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
+
+  GLfloat ambientLight[] = {0.2, 0.2, 0.2, 1.0}; // Ambient plus diffuse sum to 1
+  GLfloat diffuseLight[] = {0.8, 0.8, 0.8, 1.0};
+  GLfloat specularLight[] = {0.5, 0.5, 0.5, 1.0};
+  GLfloat position[] = {0.5, 0.5, 0.0, 1.0};
+
+  glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+  glLightfv(GL_LIGHT0, GL_POSITION, position);
 
   window.reset(_window, SDL_DestroyWindow);
   return window;

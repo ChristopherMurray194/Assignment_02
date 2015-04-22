@@ -1,8 +1,12 @@
 #version 130
 
 in vec3 position;
+in vec2 texCoords;
+
 uniform mat4 camera;
 uniform mat4 model_matrix;
+
+out vec2 texCoordinates;
 
 mat4 projection(
 	float angle_of_view_y,
@@ -55,4 +59,6 @@ void main()
 					* camera 	// view matrix
 					* model_matrix	// Model matrix
 					* vec4(position, 1.0f);
+					
+	texCoordinates = texCoords;
 }
