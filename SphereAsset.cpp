@@ -19,12 +19,14 @@ SphereAsset::SphereAsset(const GLfloat radius,
 	texture = SOIL_load_OGL_texture(texture_file_path,
 									SOIL_LOAD_AUTO,			// specify image format
 									SOIL_CREATE_NEW_ID,		// Create new texture ID
-									SOIL_FLAG_POWER_OF_TWO);		// Specify flags
+									SOIL_FLAG_MIPMAPS);		// Specify flags
 
 	//Define texture parameters
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_BUFFER, texture);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	// Assign the new positions
 	this->x_pos = x_pos;
@@ -156,10 +158,15 @@ void SphereAsset::Draw(GLuint program_token)
 
 	// create model matrix
 	glm::mat4 model_matrix = rotate_y(glm::radians(rotate_angle)) * rotate_x(glm::radians(90.0)) *  glm::translate(glm::mat4(1.0f), glm::vec3(-x_pos, -y_pos, -z_pos));
-
 	GLuint model_attrib = glGetUniformLocation(program_token, "model_matrix");
 	// Send model matrix to vertex shader
 	glUniformMatrix4fv(model_attrib, 1, GL_FALSE, &model_matrix[0][0]);
+
+	// create texture matrix
+	glm::mat4 texture_matrix = rotate_y(glm::radians(90.0)) * rotate_x(glm::radians(90.0));
+	GLuint tex_matrix_attrib = glGetUniformLocation(program_token, "texture_matrix");
+	// Send texture matrix to vertex shader
+	glUniformMatrix4fv(tex_matrix_attrib, 1, GL_FALSE, &texture_matrix[0][0]);
 
 	glUseProgram(program_token);
 
@@ -179,7 +186,7 @@ void SphereAsset::Draw(GLuint program_token)
 	glEnableVertexAttribArray(position_attrib);
 
 	GLuint texture_attrib = glGetUniformLocation(program_token, "texSampler");
-	glProgramUniform1i(program_token, texture_attrib, 0);
+	glProgramUniform1i(program_token, texture_attrib, 0);	// Send texture to shader
 
 	GLuint texCoord_attrib = glGetAttribLocation(program_token, "texCoords");
 	glBindBuffer(GL_ARRAY_BUFFER,texturebuffer);

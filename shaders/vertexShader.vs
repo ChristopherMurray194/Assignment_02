@@ -5,8 +5,9 @@ in vec2 texCoords;
 
 uniform mat4 camera;
 uniform mat4 model_matrix;
+uniform mat4 texture_matrix;
 
-out vec2 texCoordinates;
+out vec4 texCoordinates;
 
 mat4 projection(
 	float angle_of_view_y,
@@ -60,5 +61,6 @@ void main()
 					* model_matrix	// Model matrix
 					* vec4(position, 1.0f);
 					
-	texCoordinates = texCoords;
+	texCoordinates = texture_matrix
+					* vec4(texCoords, 0.0, 0.0);
 }
