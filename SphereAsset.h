@@ -62,8 +62,10 @@ private:
 
 	/**
 	 * Normalise the given vertex
+	 *
+	 * Calculate UV method from http://sol.gfxile.net/sphere/
 	 */
-	void normalise(GLfloat, GLfloat, GLfloat, std::vector<GLfloat>&);
+	void normalise(GLfloat, GLfloat, GLfloat, std::vector<GLfloat>&, std::vector<GLfloat>&);
 
 	/**
 	 * rotate on the x axis
@@ -76,6 +78,12 @@ private:
 	 * @param angle of rotation
 	 */
 	glm::mat4 rotate_y(GLfloat);
+
+	/**
+	 * rotate on the z axi
+	 * @aparam angle of rotation
+	 */
+	glm::mat4 rotate_z(GLfloat);
 };
 
 #endif /* SPHEREASSET_H_ */

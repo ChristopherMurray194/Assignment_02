@@ -17,13 +17,13 @@ SphereAsset::SphereAsset(const GLfloat radius,
 {
 	// load the texture
 	texture = SOIL_load_OGL_texture(texture_file_path,
-									SOIL_LOAD_AUTO,			// specify image format
-									SOIL_CREATE_NEW_ID,		// Create new texture ID
-									SOIL_FLAG_MIPMAPS);		// Specify flags
+									SOIL_LOAD_AUTO,								// specify image format
+									SOIL_CREATE_NEW_ID,							// Create new texture ID
+									SOIL_FLAG_MIPMAPS | SOIL_FLAG_POWER_OF_TWO);	// Specify flags
 
 	//Define texture parameters
 	glBindTexture(GL_TEXTURE_BUFFER, texture);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -44,33 +44,23 @@ SphereAsset::SphereAsset(const GLfloat radius,
 	{
 		for(GLuint j = 0; j  < slices; j++)
 		{
-			GLfloat U = i / (GLfloat)stacks;	// Calculate U coordinates
-			GLfloat V = j / (GLfloat)slices;	// Calcualte V coordinates
 
-			GLfloat theta = i * PI / stacks;	// Calculate the theta angle (angle on the z and y axis)
-			GLfloat phi = j * 2 * PI / slices;	// Calculate the phi angle (angle on the x and y axis)
+			GLfloat phi = i * PI / stacks;	// Calculate the theta angle (angle on the z and y axis)
+			GLfloat theta = j * 2 * PI / slices;	// Calculate the phi angle (angle on the x and y axis)
 
 			GLfloat x, y, z;
-			x = radius * sin(theta) * cos(phi);	// Calculate the x of the vertex
-			y = radius * sin(theta) * sin(phi);	// Calculate the y of the vertex
-			z = radius * cos(theta);			// Calculate the z of the vertex
+			x = radius * sin(phi) * cos(theta);	// Calculate the x of the vertex
+			y = radius * sin(phi) * sin(theta);	// Calculate the y of the vertex
+			z = radius * cos(phi);			// Calculate the z of the vertex
 
-			normalise(x, y, z, normals);	// Normalise the vertex
 
 			//---Add the vertex to the vertex vector--//
 			vertices.push_back(x);
 			vertices.push_back(y);
 			vertices.push_back(z);
 
-			texcoords.push_back(U);
-			texcoords.push_back(V);
-		}
-	}
+			normalise(x, y, z, normals, texcoords);
 
-	for(GLuint i = 0; i < stacks; i++)
-	{
-		for(GLuint j = 0; j <= slices; j++)
-		{
 			indices.push_back((i * slices) + (j % slices));
 			indices.push_back(((i + 1) * slices) + (j % slices));
 		}
@@ -104,6 +94,12 @@ SphereAsset::SphereAsset(const GLfloat radius,
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * element_buffer_length, &indices[0], GL_STATIC_DRAW);
 	//-----------------------------//
+
+	// Clear vectors
+	vertices.clear();
+	texcoords.clear();
+	normals.clear();
+	indices.clear();
 }
 
 SphereAsset::~SphereAsset()
@@ -111,17 +107,26 @@ SphereAsset::~SphereAsset()
 	// TODO Auto-generated destructor stub
 }
 
-void SphereAsset::normalise(GLfloat vx, GLfloat vy, GLfloat vz, std::vector<GLfloat> &normals)
+void SphereAsset::normalise(GLfloat vx, GLfloat vy, GLfloat vz, std::vector<GLfloat> &normals, std::vector<GLfloat> &texcoords)
 {
 	GLfloat d = std::sqrt(vx * vx + vy * vy + vz * vz);
+	GLfloat dx, dy, dz;
 	if(d != 0.0)
 	{
-		vx /= d;
-		vy /= d;
-		vz /= d;
-		normals.push_back(vx);
-		normals.push_back(vy);
-		normals.push_back(vz);
+		dx /= d;
+		dy /= d;
+		dz /= d;
+		normals.push_back(dx);
+		normals.push_back(dy);
+		normals.push_back(dz);
+
+		//Generate UV coordinates
+		const GLfloat PI = 3.1415926535;	// define PI
+		GLfloat U = (atan2(vy, vx) / PI + 1.0f) * 0.5;
+		GLfloat V = acos(vz / d) / PI;
+
+		texcoords.push_back(U);
+		texcoords.push_back(V);
 	}
 }
 
@@ -129,8 +134,8 @@ glm::mat4 SphereAsset::rotate_x(GLfloat theta)
 {
 	return glm::mat4(
 			glm::vec4(1.0, 0.0, 0.0, 0.0),
-			glm::vec4(0.0, cos(theta), sin(theta), 0.0),
-			glm::vec4(0.0, -sin(theta), cos(theta), 0.0),
+			glm::vec4(0.0, cos(theta), -sin(theta), 0.0),
+			glm::vec4(0.0, sin(theta), cos(theta), 0.0),
 			glm::vec4(0.0, 0.0, 0.0, 1.0)
 		);
 }
@@ -138,9 +143,9 @@ glm::mat4 SphereAsset::rotate_x(GLfloat theta)
 glm::mat4 SphereAsset::rotate_y(float theta)
 {
 	return glm::mat4(
-			glm::vec4(cos(theta), 0.0, -sin(theta), 0.0),
+			glm::vec4(cos(theta), 0.0, sin(theta), 0.0),
 			glm::vec4(0.0, 1.0, 0.0, 0.0),
-			glm::vec4(sin(theta), 0.0, cos(theta), 0.0),
+			glm::vec4(-sin(theta), 0.0, cos(theta), 0.0),
 			glm::vec4(0.0, 0.0, 0.0, 1.0)
 		);
 }
@@ -157,16 +162,11 @@ void SphereAsset::Draw(GLuint program_token)
 	}
 
 	// create model matrix
-	glm::mat4 model_matrix = rotate_y(glm::radians(rotate_angle)) * rotate_x(glm::radians(90.0)) *  glm::translate(glm::mat4(1.0f), glm::vec3(-x_pos, -y_pos, -z_pos));
+	glm::mat4 model_matrix = rotate_y(glm::radians(rotate_angle)) * rotate_x(glm::radians(90.0)) *  glm::translate(glm::mat4(1.0f), glm::vec3(x_pos, y_pos, z_pos));
 	GLuint model_attrib = glGetUniformLocation(program_token, "model_matrix");
 	// Send model matrix to vertex shader
 	glUniformMatrix4fv(model_attrib, 1, GL_FALSE, &model_matrix[0][0]);
 
-	// create texture matrix
-	glm::mat4 texture_matrix = rotate_y(glm::radians(90.0)) * rotate_x(glm::radians(90.0));
-	GLuint tex_matrix_attrib = glGetUniformLocation(program_token, "texture_matrix");
-	// Send texture matrix to vertex shader
-	glUniformMatrix4fv(tex_matrix_attrib, 1, GL_FALSE, &texture_matrix[0][0]);
 
 	glUseProgram(program_token);
 
