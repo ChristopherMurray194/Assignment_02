@@ -44,7 +44,6 @@ SphereAsset::SphereAsset(const GLfloat radius,
 	{
 		for(GLuint j = 0; j  < slices; j++)
 		{
-
 			GLfloat phi = i * PI / stacks;	// Calculate the theta angle (angle on the z and y axis)
 			GLfloat theta = j * 2 * PI / slices;	// Calculate the phi angle (angle on the x and y axis)
 
@@ -61,8 +60,15 @@ SphereAsset::SphereAsset(const GLfloat radius,
 
 			normalise(x, y, z, normals, texcoords);
 
-			indices.push_back((i * slices) + (j % slices));
-			indices.push_back(((i + 1) * slices) + (j % slices));
+		}
+	}
+
+	for(GLuint i = 0; i < stacks; i++)
+	{
+		for(GLuint j = 0; j  <= slices; j++)
+		{
+		indices.push_back((i * slices) + (j % slices));
+		indices.push_back(((i + 1) * slices) + (j % slices));
 		}
 	}
 
@@ -109,16 +115,20 @@ SphereAsset::~SphereAsset()
 
 void SphereAsset::normalise(GLfloat vx, GLfloat vy, GLfloat vz, std::vector<GLfloat> &normals, std::vector<GLfloat> &texcoords)
 {
-	GLfloat d = std::sqrt(vx * vx + vy * vy + vz * vz);
-	GLfloat dx, dy, dz;
+	GLfloat d = std::sqrt((vx * vx) + (vy * vy) + (vz * vz));	// length of vertex
+
+	GLfloat nx = vx;
+	GLfloat ny = vy;
+	GLfloat nz = vz;
 	if(d != 0.0)
 	{
-		dx /= d;
-		dy /= d;
-		dz /= d;
-		normals.push_back(dx);
-		normals.push_back(dy);
-		normals.push_back(dz);
+		nx /= d;	// normalise x
+		ny /= d;	// normalise y
+		nz /= d;	// normalise z
+
+		normals.push_back(nx);
+		normals.push_back(ny);
+		normals.push_back(nz);
 
 		//Generate UV coordinates
 		const GLfloat PI = 3.1415926535;	// define PI
@@ -152,6 +162,10 @@ glm::mat4 SphereAsset::rotate_y(float theta)
 
 void SphereAsset::Draw(GLuint program_token)
 {
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	glUseProgram(program_token);
+
 	if(rotate_angle >= 0.0)
 	{
 		rotate_angle++;
@@ -167,9 +181,6 @@ void SphereAsset::Draw(GLuint program_token)
 	// Send model matrix to vertex shader
 	glUniformMatrix4fv(model_attrib, 1, GL_FALSE, &model_matrix[0][0]);
 
-
-	glUseProgram(program_token);
-
 	// Comment out the following line to make sphere solid
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	// Display as wireframe
 
@@ -184,6 +195,19 @@ void SphereAsset::Draw(GLuint program_token)
 			(void*)0				// array buffer offset
 		);
 	glEnableVertexAttribArray(position_attrib);
+
+
+	GLuint normals_attrib = glGetAttribLocation(program_token, "normals");
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+	glVertexAttribPointer(
+			normals_attrib,
+			3,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			(void*)0
+		);
+	glEnableVertexAttribArray(normals_attrib);
 
 	GLuint texture_attrib = glGetUniformLocation(program_token, "texSampler");
 	glProgramUniform1i(program_token, texture_attrib, 0);	// Send texture to shader
@@ -201,19 +225,6 @@ void SphereAsset::Draw(GLuint program_token)
 	glEnableVertexAttribArray(texCoord_attrib);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
-
-	GLuint normals_attrib = glGetAttribLocation(program_token, "normals");
-	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	glVertexAttribPointer(
-			normals_attrib,
-			3,
-			GL_FLOAT,
-			GL_FALSE,
-			0,
-			(void*)0
-		);
-	glEnableVertexAttribArray(normals_attrib);
-
 	glDrawElements(
 				GL_TRIANGLE_STRIP,
 				element_buffer_length,

@@ -47,6 +47,21 @@ void Draw(const boost::shared_ptr<SDL_Window> window, boost::shared_ptr<GameWorl
 	SDL_GL_SwapWindow(window.get());
 }
 
+void initLighting()
+{
+	GLfloat specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat shininess[] = {50.0f};
+	GLfloat light_position[] = {2.0f, 1.0f, 0.0f, 0.0f};
+	glShadeModel(GL_SMOOTH);
+
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+}
+
 boost::shared_ptr<SDL_Window> InitWorld() {
   Uint32 width = 640;
   Uint32 height = 480;
@@ -100,7 +115,9 @@ boost::shared_ptr<SDL_Window> InitWorld() {
 
   // OpenGL settings
   glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
   glEnable(GL_NORMALIZE);
+  initLighting();
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 
