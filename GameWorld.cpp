@@ -12,7 +12,7 @@ GameWorld::GameWorld() {
 
 	std::string earth_texture = "textures/earth_texture.png";
 	std::string moon_texture = "textures/moon_texture.jpg";
-	game_manager->AddAsset(boost::make_shared<SphereAsset>(3.0, 30, 60, earth_texture.c_str()));	// Earth
+	game_manager->AddAsset(boost::make_shared<SphereAsset>(3.0, 90, 180, earth_texture.c_str()));	// Earth
 	game_manager->AddAsset(boost::make_shared<SphereAsset>(0.5, 30, 60, earth_texture.c_str(), 4.0));	// Moon
 	game_manager->AddAsset(boost::make_shared<Camera>());
 }

@@ -31,6 +31,7 @@ void GameManager::Draw()
 {
 	for(auto ga : draw_list)
 	{
+		glClear(GL_DEPTH_BUFFER_BIT);
 		ga->Draw(getProgramToken());	// Draw all the assets
 	}
 }

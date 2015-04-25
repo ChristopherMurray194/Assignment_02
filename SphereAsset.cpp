@@ -162,8 +162,6 @@ glm::mat4 SphereAsset::rotate_y(float theta)
 
 void SphereAsset::Draw(GLuint program_token)
 {
-	glClear(GL_DEPTH_BUFFER_BIT);
-
 	glUseProgram(program_token);
 
 	if(rotate_angle >= 0.0)

@@ -95,6 +95,12 @@ boost::shared_ptr<SDL_Window> InitWorld() {
                              , height
                              , SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
+  /**
+   * Trap the cursor inside the window
+   * Disadvantage of this function is that it also hides the cursor
+   */
+  SDL_SetRelativeMouseMode(SDL_TRUE);
+
   if (!_window) {
     std::cout << "Failed to create SDL window: " << SDL_GetError() << std::endl;
     return nullptr;
@@ -125,7 +131,6 @@ boost::shared_ptr<SDL_Window> InitWorld() {
   return window;
 }
 
-
 int main(int argc, char *argv[]) {
   Uint32 delay = 1000/60; // in milliseconds
 
@@ -137,12 +142,17 @@ int main(int argc, char *argv[]) {
     SDL_Quit();
   }
 
+  Uint32 getticks, delta, frametimelast;
+
   // Call the function "tick" every delay milliseconds
   SDL_AddTimer(delay, tick, NULL);
   // Add the main event loop
   SDL_Event event;
   while (SDL_WaitEvent(&event)) {
     switch (event.type) {
+    case SDL_MOUSEMOTION:
+		camera_ptr->calcYaw(event.motion.x);
+    	break;
     // Get key presses
     case SDL_KEYDOWN:
     	switch(event.key.keysym.sym){
@@ -163,19 +173,27 @@ int main(int argc, char *argv[]) {
 			camera_ptr->right();
 			break;
     	case SDLK_q:
-    		camera_ptr->rotLeft();
+    		camera_ptr->rotLeft((GLfloat)delta);
     		break;
     	case SDLK_e:
-    		camera_ptr->rotRight();
+    		camera_ptr->rotRight((GLfloat)delta);
     		break;
-    	case SDLK_x:
+    	case SDLK_z:
 			// move camera forward when pressed
 			camera_ptr->up();
 			break;
-    	case SDLK_c:
+    	case SDLK_x:
 			// move camera forward when pressed
 			camera_ptr->down();
 			break;
+    	case SDLK_c:
+    		// Rotate the pitch angle up
+    		camera_ptr->lookUp((GLfloat)delta);
+    		break;
+    	case SDLK_v:
+    		// Rotate the pitch angle down
+    		camera_ptr->lookDown((GLfloat)delta);
+    		break;
     	case SDLK_ESCAPE:
     		// Exit game
     		exit(0);
@@ -189,6 +207,10 @@ int main(int argc, char *argv[]) {
       break;
     case SDL_USEREVENT:
       Draw(window, game_world);
+
+      getticks = SDL_GetTicks();
+      delta = getticks - frametimelast;
+      frametimelast = getticks;
 
       break;
     default:

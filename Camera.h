@@ -31,38 +31,32 @@ public:
 
 	  /**
 	   * Move camera forward
-	   * @param deltaTime : time between each frame
 	   */
 	  void forward();
 
 	  /**
 	   * Move camera back
-	   * @param deltaTime : time between each frame
 	   */
 	  void backward();
 
 	  /**
 	   * Strafe camera left
-	   * @param deltaTime : time between each frame
 	   */
 	  void left();
 
 	  /**
 	   * Strafe camera right
-	   * @param deltaTime : time between each frame
 	   */
 	  void right();
 
 	  /**
 	   * Strafe camera up
-	   * @param deltaTime : time between each frame
 	   *
 	   */
 	  void up();
 
 	  /**
 	   * Strafe camera down
-	   * @param deltaTime : time between each frame
 	   *
 	   */
 	  void down();
@@ -70,22 +64,36 @@ public:
 	  /**
 	   * rotate left with Q key
 	   */
-	  void rotLeft();
+	  void rotLeft(GLfloat);
 
 	  /**
 	   * rotate right with E key
 	   */
-	  void rotRight();
+	  void rotRight(GLfloat);
 
 	  /**
-	   * Handles the camera control using the mouse
+	   * Changes the yaw angle using the mouse
+	   * @ the current x position of the mouse
 	   */
-	  void mouseMovement(GLfloat, GLfloat, bool);
+	  void calcYaw(GLfloat);
+
+	  /**
+	   * Changed the pitch angle up
+	   */
+	  void lookUp(GLfloat);
+
+	  /**
+	   * Changes the pitch angle down
+	   */
+	  void lookDown(GLfloat);
+
+	  /**
+	   * The view matrix for a FPS (fly through) camera
+	   */
+	  glm::mat4 view_matrix(glm::vec3, GLfloat, GLfloat);
 
 	  /**
 	   * Get the camera position
-	   * @bug The camera's look at point does not change, as a result forward for example is always the same direction.
-	   * @bug The camera's rotation does not function correctly once the cursor leaves the window.
 	   * @param program to send camera to
 	   */
 	  virtual void Draw(GLuint);
@@ -93,6 +101,8 @@ public:
 private:
 	  // define PI
 	  const GLfloat PI = 3.1415926535;
+
+	  GLfloat movementSpeed = 0.1;
 };
 
 #endif /* CAMERA_H_ */
