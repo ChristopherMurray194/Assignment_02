@@ -30,33 +30,33 @@ public:
 	virtual ~Camera();
 
 	  /**
-	   * Move camera forward
+	   * Move camera forward with W key
 	   */
 	  void forward();
 
 	  /**
-	   * Move camera back
+	   * Move camera back with S key
 	   */
 	  void backward();
 
 	  /**
-	   * Strafe camera left
+	   * Strafe camera left	with A key
 	   */
 	  void left();
 
 	  /**
-	   * Strafe camera right
+	   * Strafe camera right with D key
 	   */
 	  void right();
 
 	  /**
-	   * Strafe camera up
+	   * Strafe camera up with Z key
 	   *
 	   */
 	  void up();
 
 	  /**
-	   * Strafe camera down
+	   * Strafe camera down with X key
 	   *
 	   */
 	  void down();
@@ -78,12 +78,12 @@ public:
 	  void calcYaw(GLfloat);
 
 	  /**
-	   * Changed the pitch angle up
+	   * Changed the pitch angle up with V key
 	   */
 	  void lookUp(GLfloat);
 
 	  /**
-	   * Changes the pitch angle down
+	   * Changes the pitch angle down with C key
 	   */
 	  void lookDown(GLfloat);
 

@@ -157,46 +157,37 @@ int main(int argc, char *argv[]) {
     case SDL_KEYDOWN:
     	switch(event.key.keysym.sym){
     	case SDLK_w:
-    		// move camera forward when pressed
-    		camera_ptr->forward();
+    		camera_ptr->forward(); // move camera forward when pressed
     		break;
     	case SDLK_a:
-			// move camera forward when pressed
-			camera_ptr->left();
+    		camera_ptr->left();	// move camera left when pressed
 			break;
     	case SDLK_s:
-			// move camera forward when pressed
-			camera_ptr->backward();
+			camera_ptr->backward(); // move camera back when pressed
 			break;
     	case SDLK_d:
-			// move camera forward when pressed
-			camera_ptr->right();
+			camera_ptr->right(); // move camera right when pressed
 			break;
     	case SDLK_q:
-    		camera_ptr->rotLeft((GLfloat)delta);
+    		camera_ptr->rotLeft((GLfloat)delta); // rotate the camera left
     		break;
     	case SDLK_e:
-    		camera_ptr->rotRight((GLfloat)delta);
+    		camera_ptr->rotRight((GLfloat)delta);	// rotate the camera right
     		break;
     	case SDLK_z:
-			// move camera forward when pressed
-			camera_ptr->up();
+			camera_ptr->up(); // move camera up when pressed
 			break;
     	case SDLK_x:
-			// move camera forward when pressed
-			camera_ptr->down();
+			camera_ptr->down(); // move camera down when pressed
 			break;
     	case SDLK_c:
-    		// Rotate the pitch angle up
-    		camera_ptr->lookUp((GLfloat)delta);
+    		camera_ptr->lookDown((GLfloat)delta); // Rotate the pitch angle down
     		break;
     	case SDLK_v:
-    		// Rotate the pitch angle down
-    		camera_ptr->lookDown((GLfloat)delta);
+    		camera_ptr->lookUp((GLfloat)delta); // Rotate the pitch angle up
     		break;
     	case SDLK_ESCAPE:
-    		// Exit game
-    		exit(0);
+    		exit(0); // Exit game
     		break;
     	default:
     		break;
