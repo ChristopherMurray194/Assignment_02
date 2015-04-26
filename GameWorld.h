@@ -12,6 +12,7 @@
 #include <boost/make_shared.hpp>
 
 #include "GameManager.h"
+#include "Light.h"
 #include "SphereAsset.h"
 #include "Camera.h"
 

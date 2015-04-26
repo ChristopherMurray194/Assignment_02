@@ -26,7 +26,7 @@ LFLAGS =
 LIBS = -lstdc++ -lGL -lGLEW -lSDL2 -lm -lSOIL
 
 # define the C source files
-SRCS = main.cpp SphereAsset.cpp LoadShader.cpp GameManager.cpp Camera.cpp GameWorld.cpp
+SRCS = main.cpp SphereAsset.cpp LoadShader.cpp GameManager.cpp Camera.cpp GameWorld.cpp Light.cpp
 
 # define the C object files 
 #

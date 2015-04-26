@@ -15,7 +15,6 @@
 #define CAMERA_H_
 
 #include <GL/glew.h>
-#include <SDL2/SDL.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
