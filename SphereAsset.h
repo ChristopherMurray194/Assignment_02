@@ -54,7 +54,7 @@ private:
 	GLuint elementbuffer;			// This will identify the element buffer
 	GLuint element_buffer_length;	// This will store the length of the element buffer
 
-	GLuint texture;					// This will identify the texture used
+	GLuint textureID;					// This will identify the texture used
 
 	GLfloat x_pos, y_pos, z_pos;	// Position variables to be passed to vertex_shader
 
@@ -65,7 +65,7 @@ private:
 	 *
 	 * Calculate UV method from http://sol.gfxile.net/sphere/
 	 */
-	void normalise(GLfloat, GLfloat, GLfloat, std::vector<GLfloat>&, std::vector<GLfloat>&);
+	glm::vec3 normalise(glm::vec3);
 
 	/**
 	 * rotate on the x axis

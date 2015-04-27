@@ -23,7 +23,7 @@ LFLAGS =
 # define any libraries to link into executable:
 #   if I want to link in libraries (libx.so or libx.a) I use the -llibname 
 #   option, something like (this will link in libmylib.so and libm.so):
-LIBS = -lstdc++ -lGL -lGLEW -lSDL2 -lm -lSOIL
+LIBS = -lstdc++ -lGL -lGLEW -lSDL2 -lSOIL
 
 # define the C source files
 SRCS = main.cpp SphereAsset.cpp LoadShader.cpp GameManager.cpp Camera.cpp GameWorld.cpp Light.cpp

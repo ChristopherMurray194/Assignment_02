@@ -1,6 +1,7 @@
-#version 130
+#version 150
 
 uniform sampler2D texSampler;
+uniform vec4 As;
 uniform vec4 diffuse;
 uniform vec4 diffuse_material;
 uniform vec4 ambient;
@@ -9,11 +10,13 @@ uniform float shininess_material;
 uniform vec4 spec;
 uniform vec4 specular_material;
 
-in vec3 norm;
-in vec3 eyeVec;
-in vec3 lightDirection;
-in vec2 texCoordinates;
-in vec2 xy_position;
+in Data {
+	vec3 norm;
+	vec3 eyeVec;
+	vec3 lightDirection;
+	vec2 texCoordinates;
+	vec2 xy_position;
+} DataIn;
 
 out vec4 color;
 
@@ -29,21 +32,21 @@ void main()
 	const float PI = 3.1415926535;
 	
 	vec4 finalColor = 
-	(gl_FrontLightModelProduct.sceneColor * ambient_material) + 
+	(As * ambient_material) + 
 	(ambient * ambient_material);
 	
-	vec3 N = normalize(norm);
-	vec3 L = normalize(lightDirection);
+	vec3 N = normalize(DataIn.norm);
+	vec3 L = normalize(DataIn.lightDirection);
 	
 	float lambertTerm = dot(N, L);
 	
-	if(lambertTerm > 0.0)
+	if(lambertTerm > 0.0f)
 	{
 		finalColor += diffuse
 						* diffuse_material 
 						* lambertTerm;
 					  			
-		vec3 E = normalize(eyeVec);
+		vec3 E = normalize(DataIn.eyeVec);
 		vec3 R = reflect(-L, N);
 		float specular = pow(max(dot(R,E), 0.0),
 						 shininess_material);
@@ -53,7 +56,7 @@ void main()
 						* specular;
 	}
 	
-	vec2 texCoord = texCoordinates;
-	texCoord.x = (PI + atan(xy_position.y, xy_position.x)) / (2 * PI);
+	vec2 texCoord = DataIn.texCoordinates;
+	texCoord.x = (PI + atan(DataIn.xy_position.y, DataIn.xy_position.x)) / (2 * PI);
 	color = finalColor * texture2D(texSampler, texCoord);
 }

@@ -16,13 +16,13 @@ SphereAsset::SphereAsset(const GLfloat radius,
 						 GLfloat z_pos)
 {
 	// load the texture
-	texture = SOIL_load_OGL_texture(texture_file_path,
+	textureID = SOIL_load_OGL_texture(texture_file_path,
 									SOIL_LOAD_AUTO,								// specify image format
 									SOIL_CREATE_NEW_ID,							// Create new texture ID
 									SOIL_FLAG_MIPMAPS | SOIL_FLAG_POWER_OF_TWO);	// Specify flags
 
 	//Define texture parameters
-	glBindTexture(GL_TEXTURE_BUFFER, texture);
+	glBindTexture(GL_TEXTURE_BUFFER, textureID);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -35,10 +35,10 @@ SphereAsset::SphereAsset(const GLfloat radius,
 
 	const GLfloat PI = 3.1415926535;	// define PI
 
-	std::vector<GLfloat> vertices;
-	std::vector<GLfloat> normals;
-	std::vector<GLfloat> texcoords;
-	std::vector<GLuint> indices;
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> normals;
+	std::vector<glm::vec2> texcoords;
+	std::vector<GLushort> indices;
 
 	for(GLuint i = 0; i <= stacks; i++)
 	{
@@ -54,12 +54,20 @@ SphereAsset::SphereAsset(const GLfloat radius,
 
 
 			//---Add the vertex to the vertex vector--//
-			vertices.push_back(x);
-			vertices.push_back(y);
-			vertices.push_back(z);
+			vertices.push_back(glm::vec3(x, y, z));
 
-			normalise(x, y, z, normals, texcoords);
+			GLfloat d = std::sqrt((x * x) + (y * y) + (z * z));	// length of vertex
 
+			if(d != 0.0)
+			{
+			//Generate UV coordinates
+			const GLfloat PI = 3.1415926535;	// define PI
+			GLfloat U = (atan2(y, x) / PI + 1.0f) * 0.5;
+			GLfloat V = acos(z / d) / PI;
+
+			texcoords.push_back(glm::vec2(U, V));
+
+			}
 		}
 	}
 
@@ -67,9 +75,24 @@ SphereAsset::SphereAsset(const GLfloat radius,
 	{
 		for(GLuint j = 0; j  <= slices; j++)
 		{
-		indices.push_back((i * slices) + (j % slices));
-		indices.push_back(((i + 1) * slices) + (j % slices));
+			indices.push_back((i * slices) + (j % slices));
+			indices.push_back(((i + 1) * slices) + (j % slices));
 		}
+	}
+
+	// Calculate vertex normals
+	for(GLuint i = 0; i < indices.size(); i++)
+	{
+		glm::vec3 U = vertices[i+1] - vertices[i];
+		glm::vec3 V = vertices[i+2] - vertices[i];
+
+		glm::vec3 surfaceNormal = glm::cross(U, V);	// Calculate the surface normal
+
+		glm::vec3 normalised_surface = normalise(surfaceNormal); // Normalise surface normal
+
+		glm::vec3 vertex_normals = normalise(normalised_surface);
+
+		normals.push_back(vertex_normals);
 	}
 
 	GLuint vertex_buffer_length = vertices.size();
@@ -77,22 +100,24 @@ SphereAsset::SphereAsset(const GLfloat radius,
 	GLuint normals_buffer_length = normals.size();
 	element_buffer_length = indices.size();
 
+	//for(GLuint i = 0; i < normals.size(); i++) std::cout << normals[i].x + normals[i].y + normals[i].z << std::endl;
+
 	//--------Vertex buffer--------//
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * vertex_buffer_length, &vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertex_buffer_length, &vertices[0], GL_STATIC_DRAW);
 	//-----------------------------//
 
 	//--------Texture buffer-------//
 	glGenBuffers(1, &texturebuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, texturebuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * texture_buffer_length, &texcoords[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * texture_buffer_length, &texcoords[0], GL_STATIC_DRAW);
 	//-----------------------------//
 
 	//--------Normals buffer-------//
 	glGenBuffers(1, &normalbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * normals_buffer_length, &normals[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * normals_buffer_length, &normals[0], GL_STATIC_DRAW);
 	//----------------------------//
 
 	//-------Element buffer--------//
@@ -113,31 +138,21 @@ SphereAsset::~SphereAsset()
 	// TODO Auto-generated destructor stub
 }
 
-void SphereAsset::normalise(GLfloat vx, GLfloat vy, GLfloat vz, std::vector<GLfloat> &normals, std::vector<GLfloat> &texcoords)
+glm:: vec3 SphereAsset::normalise(glm::vec3 v)
 {
-	GLfloat d = std::sqrt((vx * vx) + (vy * vy) + (vz * vz));	// length of vertex
+	glm::vec3 normalised_vector;
 
-	GLfloat nx = vx;
-	GLfloat ny = vy;
-	GLfloat nz = vz;
+	GLfloat d = std::sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z));	// length of vertex
+
 	if(d != 0.0)
 	{
-		nx /= d;	// normalise x
-		ny /= d;	// normalise y
-		nz /= d;	// normalise z
+		v.x /= d;	// normalise x
+		v.y /= d;	// normalise y
+		v.z /= d;	// normalise z
 
-		normals.push_back(nx);
-		normals.push_back(ny);
-		normals.push_back(nz);
-
-		//Generate UV coordinates
-		const GLfloat PI = 3.1415926535;	// define PI
-		GLfloat U = (atan2(vy, vx) / PI + 1.0f) * 0.5;
-		GLfloat V = acos(vz / d) / PI;
-
-		texcoords.push_back(U);
-		texcoords.push_back(V);
+		normalised_vector = glm::vec3(v.x, v.y, v.z);
 	}
+	return normalised_vector;
 }
 
 glm::mat4 SphereAsset::rotate_x(GLfloat theta)
@@ -226,7 +241,7 @@ void SphereAsset::Draw(GLuint program_token)
 	glDrawElements(
 				GL_TRIANGLE_STRIP,
 				element_buffer_length,
-				GL_UNSIGNED_INT,
+				GL_UNSIGNED_SHORT,
 				(GLvoid*)0
 				);
 

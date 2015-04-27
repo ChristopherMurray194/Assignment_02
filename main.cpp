@@ -107,7 +107,6 @@ boost::shared_ptr<SDL_Window> InitWorld() {
   // OpenGL settings
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
-  glEnable(GL_NORMALIZE);
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   glEnable(GL_DEPTH_TEST);
