@@ -36,6 +36,7 @@ void Light::initLight()
 
 void Light::Draw(GLuint program_token)
 {
+
 	initLight();
 
 	// Pass to shader

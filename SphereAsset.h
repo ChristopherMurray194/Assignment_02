@@ -61,11 +61,26 @@ private:
 	GLfloat rotate_angle = 0.0;		// This is the rotation angle
 
 	/**
-	 * Normalise the given vertex
-	 *
-	 * Calculate UV method from http://sol.gfxile.net/sphere/
+	 * Calculate vertices and texture coordinates
 	 */
-	glm::vec3 normalise(glm::vec3);
+	void calcVerticesAndTexCoords(const GLuint, const GLuint, const GLfloat, std::vector<glm::vec3>&, std::vector<glm::vec2>&);
+
+	/**
+	 * Calculate indices
+	 */
+	void calcIndices(const GLuint, const GLuint, std::vector<GLushort>&);
+
+	/**
+	 * Normalise the given vector
+	 *
+	 */
+	glm::vec3 normalise(const glm::vec3&);
+
+	/**
+	 * Calculate the vertex normals per vertex
+	 * adapted from http://stackoverflow.com/questions/6656358/calculating-normals-in-a-triangle-mesh - User: Kosta's answer
+	 */
+	void normaliseVertices(const GLuint, const GLuint, std::vector<glm::vec3>, std::vector<glm::vec3>&);
 
 	/**
 	 * rotate on the x axis
