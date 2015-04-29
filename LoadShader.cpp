@@ -77,7 +77,6 @@ GLuint LoadShader::LoadShaders(
 
 		// Exit with failure
 		glDeleteShader(vertexShaderID);	// Don't leak the shader
-		exit(-1);
 	}
 
 	// Compile fragment shader
@@ -98,7 +97,6 @@ GLuint LoadShader::LoadShaders(
 		// Exit with failure
 		glDeleteShader(vertexShaderID);		// Don't leak the shader
 		glDeleteShader(fragmentShaderID);	// Don't leak the shader
-		exit(-1);
 	}
 
 	// Shaders compiled successfully.
@@ -127,7 +125,6 @@ GLuint LoadShader::LoadShaders(
 		// Don't leak the shaders either
 		glDeleteShader(vertexShaderID);
 		glDeleteShader(fragmentShaderID);
-		exit(-1);
 	}
 
 	// Always detach shaders after a successful link;

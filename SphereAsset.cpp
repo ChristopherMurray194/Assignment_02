@@ -4,7 +4,6 @@
  *  Created on: 27 Mar 2015
  *      Author: cmurray
  */
-
 #include "SphereAsset.h"
 
 SphereAsset::SphereAsset(const GLfloat radius,
@@ -47,7 +46,7 @@ SphereAsset::SphereAsset(const GLfloat radius,
 	GLuint vertex_buffer_length = vertices.size();
 	GLuint texture_buffer_length = texcoords.size();
 	GLuint normals_buffer_length = normals.size();
-	element_buffer_length = indices.size();
+	indices_buffer_length = indices.size();
 
 	//--------Vertex buffer--------//
 	glGenBuffers(1, &vertexbuffer);
@@ -68,9 +67,9 @@ SphereAsset::SphereAsset(const GLfloat radius,
 	//----------------------------//
 
 	//-------Element buffer--------//
-	glGenBuffers(1, &elementbuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * element_buffer_length, &indices[0], GL_STATIC_DRAW);
+	glGenBuffers(1, &indicesbuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesbuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices_buffer_length, &indices[0], GL_STATIC_DRAW);
 	//-----------------------------//
 
 	// Clear vectors
@@ -255,10 +254,10 @@ void SphereAsset::Draw(GLuint program_token)
 		);
 	glEnableVertexAttribArray(texCoord_attrib);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesbuffer);
 	glDrawElements(
 				GL_TRIANGLE_STRIP,
-				element_buffer_length,
+				indices_buffer_length,
 				GL_UNSIGNED_SHORT,
 				(GLvoid*)0
 				);
@@ -267,4 +266,3 @@ void SphereAsset::Draw(GLuint program_token)
 	glDisableVertexAttribArray(texture_attrib);
 	glDisableVertexAttribArray(normals_attrib);
 }
-

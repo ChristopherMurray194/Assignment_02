@@ -16,28 +16,23 @@ Light::~Light() {
 	// TODO Auto-generated destructor stub
 }
 
-void Light::initLight()
-{
-	//--------Define light terms---------------//
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, As);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
-	//-----------------------------------------//
-
-	//--------Define material terms------------//
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient_material);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse_material);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular_material);
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
-	//-----------------------------------------//
-}
-
 void Light::Draw(GLuint program_token)
 {
+	//--------Define light intensities---------------//
+	GLfloat As[4] {0.1f, 0.1f, 0.1f, 1.0f};
+	GLfloat ambient[4] {0.5f, 0.5f, 0.5f, 1.0f};
+	GLfloat diffuse[4] {0.6f, 0.6f, 0.6f, 1.0f};
+	GLfloat specular[4] {0.0f, 0.0f, 0.0f, 0.0f};
 
-	initLight();
+	GLfloat light_pos[4] {0.0f, 0.0f, 0.0f, 5.0f};
+	//-----------------------------------------//
+
+	//--------Define material color------------//
+	GLfloat ambient_material[4] {1.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat diffuse_material[4] {1.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat specular_material[4] {0.6f, 0.6f, 0.6f, 1.0f};
+	GLfloat shininess = 10.0f;								// Cannot be 0.0
+	//-----------------------------------------//
 
 	// Pass to shader
 	GLuint as_attrib = glGetUniformLocation(program_token, "As");

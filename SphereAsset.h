@@ -51,8 +51,8 @@ private:
 	GLuint vertexbuffer;			// This will identify the vertex buffer
 	GLuint texturebuffer;			// This will identify the texture buffer
 	GLuint normalbuffer;			// This will identify the normals buffer
-	GLuint elementbuffer;			// This will identify the element buffer
-	GLuint element_buffer_length;	// This will store the length of the element buffer
+	GLuint indicesbuffer;			// This will identify the element buffer
+	GLuint indices_buffer_length;	// This will store the length of the element buffer
 
 	GLuint textureID;					// This will identify the texture used
 
