@@ -8,6 +8,8 @@
 #ifndef LIGHT_H_
 #define LIGHT_H_
 
+#define GLM_FORCE_RADIANS
+
 #include <iostream>
 #include <GL/glew.h>
 #include <glm/glm.hpp>

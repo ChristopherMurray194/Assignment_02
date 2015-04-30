@@ -11,6 +11,8 @@
 #ifndef SPHEREASSET_H_
 #define SPHEREASSET_H_
 
+#define GLM_FORCE_RADIANS
+
 #include <iostream>
 #include <vector>
 #include <cmath>

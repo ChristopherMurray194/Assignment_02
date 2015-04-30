@@ -14,6 +14,8 @@
 #ifndef CAMERA_H_
 #define CAMERA_H_
 
+#define GLM_FORCE_RADIANS
+
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
