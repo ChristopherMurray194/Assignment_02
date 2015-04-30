@@ -35,7 +35,9 @@ To install the gcc C++11 compiler support use the command (as root):
 After cloning the source code, change to the directory where the source code is and enter the following commands:
 
 > $ autoreconf -i
+<br />
 > $ ./configure
+<br />
 > $ make
 
 #Running
