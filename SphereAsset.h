@@ -36,7 +36,7 @@ public:
 	 * @param y_pos - y position (Default: 0.0)
 	 * @param z_pos - z position (Default: 1.0)
 	 */
-	SphereAsset(const GLfloat, const GLuint, const GLuint, const char*, GLfloat x_pos = 0.0, GLfloat y_pos = 0.0, GLfloat z_pos = 1.0);
+	SphereAsset( const char*, const GLfloat = 1.0f, const GLuint = 20, const GLuint = 40, GLfloat x_pos = 0.0, GLfloat y_pos = 0.0, GLfloat z_pos = 1.0);
 	virtual ~SphereAsset();
 
 	/**

@@ -6,10 +6,10 @@
  */
 #include "SphereAsset.h"
 
-SphereAsset::SphereAsset(const GLfloat radius,
+SphereAsset::SphereAsset(const char * texture_file_path,
+						 const GLfloat radius,
 						 const GLuint stacks,
 						 const GLuint slices,
-						 const char * texture_file_path,
 						 GLfloat x_pos,
 						 GLfloat y_pos,
 						 GLfloat z_pos)
@@ -127,6 +127,7 @@ void SphereAsset::calcIndices(const GLuint stacks, const GLuint slices, std::vec
 	{
 		for(GLuint j = 0; j  <= slices; j++)
 		{
+			// Ensure counter-clockwise winding order
 			indices.push_back((i * slices) + (j % slices));
 			indices.push_back(((i + 1) * slices) + (j % slices));
 			indices.push_back((i * slices) + (j % slices) +1);
