@@ -114,7 +114,7 @@ IDE: Eclipse
 <br />OpenGL 
 <br />GLSL – shaders
 <br />GLM
-<br />GLFW - texturing
+<br />GLFW - texturing (SOIL (Simple OpenGL Image Library) used instead)
 <br />GLEW
 
 ####Marking Scheme
@@ -122,6 +122,40 @@ Quality of code – 30%
 <br />Lighting – 30%
 <br />Texturing – 30%
 <br />Collision Detection – 10%
+
+####Updated: Marking scheme
+**Camera implementation**
+<br />D - Basic camera implementation; Camera can be moved forward, left, right and backwards, with the key events 
+<br />C - All of the above + the camera can be rotated using the mouse.
+<br />B - All of the above + the camera can be moved freely in world space using key events (additional directions may be included e.g. up, down) .
+<br />A - All of the above + the camera can move smoothly without delay in key events.
+<br />
+<br />
+<br />**Data Structure**
+<br />D - Buffer data is hardcoded using simple arrays/lists and non-indexed using the OpenGL fixed functions.
+<br />C - Buffer data is generated algorithmically and indexed.
+<br />B - As above + indexed and can be altered by the parameters passed to the object's constructor.
+<br />A - As above + data is instanced (uses glDrawElementsInstanced).
+<br />
+<br />
+<br />**Texturing**
+<br />D - Basic texturing implemented, there may be some distortion on the texture.
+<br />C - As above + multiple instances of an object can be textured (may be the same texture).
+<br />B - As above + multiple instances of an object can have different textures.
+<br />A - Height map added to deform the sphere mesh.
+<br />
+<br />
+<br />**Lighting**
+<br />D - Basic lighting is implemented non-directional.
+<br />C - Both ambient and diffuse lighting is implemented (can be non-directional).
+<br />A - A SphereAsset acts as a light source and rotates around the other SphereAssets (earth, moon)
+<br />
+<br />
+<br />**Collision detection (Camera)**
+<br />D - Basic bounding box collision detection implemented.
+<br />C - Axis-Aligned bounding box implemented.
+<br />A - Collision detection fully implemented using a data structure such as a quad-tree.
+
 
 [1] http://stackoverflow.com/questions/7687148/drawing-sphere-in-opengl-without-using-glusphere/ <br />
 [2] http://www.gamedev.net/topic/637715-terrain-generation/page-2/
