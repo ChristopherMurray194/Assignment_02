@@ -111,7 +111,6 @@ void SphereAsset::calcVerticesAndTexCoords(const GLuint stacks, const GLuint sli
 			 * Generate UV coordinates
 			 * Calculate UV method from http://sol.gfxile.net/sphere/
 			 */
-			const GLfloat PI = 3.1415926535;	// define PI
 			GLfloat U = (atan2(y, x) / PI + 1.0f) * 0.5;
 			GLfloat V = acos(z / d) / PI;
 
@@ -130,6 +129,10 @@ void SphereAsset::calcIndices(const GLuint stacks, const GLuint slices, std::vec
 		{
 			indices.push_back((i * slices) + (j % slices));
 			indices.push_back(((i + 1) * slices) + (j % slices));
+			indices.push_back((i * slices) + (j % slices) +1);
+			indices.push_back((i * slices) + (j % slices) +1);
+			indices.push_back(((i + 1) * slices) + (j % slices));
+			indices.push_back(((i + 1) * slices) + (j % slices) +1);
 		}
 	}
 }
@@ -140,11 +143,11 @@ glm::vec3 SphereAsset::normalise(const glm::vec3 &v)
 	return glm::vec3(v.x / magnitude, v.y / magnitude, v.z / magnitude);	// Normalize and return
 }
 
-void SphereAsset::normaliseVertices(const GLuint stacks, const GLuint slices, std::vector<glm::vec3> vertices, std::vector<glm::vec3> &normals)
+void SphereAsset::normaliseVertices(const GLuint stacks, const GLuint slices, const std::vector<glm::vec3> vertices, std::vector<glm::vec3> &normals)
 {
-	for(GLuint i = 1; i <= stacks; i++)
+	for(GLuint i = 1; i < stacks; i++)
 	{
-		for(GLuint j = 1; j < slices; j++)
+		for(GLuint j = 1; j <= slices; j++)
 		{
 			// Get the indices for the adjacent vertices to pi (the vertex we want to normalize)
 			GLushort pi = ((i * slices) + (j % slices));
@@ -194,8 +197,6 @@ glm::mat4 SphereAsset::rotate_y(float theta)
 
 void SphereAsset::Draw(GLuint program_token)
 {
-	glUseProgram(program_token);
-
 	if(rotate_angle >= 0.0f)
 	{
 		rotate_angle++;
@@ -226,7 +227,6 @@ void SphereAsset::Draw(GLuint program_token)
 		);
 	glEnableVertexAttribArray(position_attrib);
 
-
 	GLuint normals_attrib = glGetAttribLocation(program_token, "normals");
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
 	glVertexAttribPointer(
@@ -256,7 +256,7 @@ void SphereAsset::Draw(GLuint program_token)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesbuffer);
 	glDrawElements(
-				GL_TRIANGLE_STRIP,
+				GL_TRIANGLES,
 				indices_buffer_length,
 				GL_UNSIGNED_SHORT,
 				(GLvoid*)0
@@ -265,4 +265,6 @@ void SphereAsset::Draw(GLuint program_token)
 	glDisableVertexAttribArray(position_attrib);
 	glDisableVertexAttribArray(texture_attrib);
 	glDisableVertexAttribArray(normals_attrib);
+
+	glUseProgram(program_token);
 }

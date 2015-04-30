@@ -7,7 +7,7 @@
 
 #include "Camera.h"
 
-	glm::vec3 position {0.0f, 1.0f, 5.0f};			// The position (or eye) of the camera
+	glm::vec3 position {0.0f, 1.0f, 6.0f};			// The position (or eye) of the camera
 
 	GLfloat yaw = 0.0f;								// Yaw = left-right rotation
 	GLfloat pitch = 0.0f;							// Pitch = up-down rotation

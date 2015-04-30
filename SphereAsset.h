@@ -80,7 +80,7 @@ private:
 	 * Calculate the vertex normals per vertex
 	 * adapted from http://stackoverflow.com/questions/6656358/calculating-normals-in-a-triangle-mesh - User: Kosta's answer
 	 */
-	void normaliseVertices(const GLuint, const GLuint, std::vector<glm::vec3>, std::vector<glm::vec3>&);
+	void normaliseVertices(const GLuint, const GLuint, const std::vector<glm::vec3>, std::vector<glm::vec3>&);
 
 	/**
 	 * rotate on the x axis
