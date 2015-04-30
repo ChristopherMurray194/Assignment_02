@@ -1,6 +1,49 @@
 # Assignment_02
 ####Team members: Christopher Murray
 
+#Prerequisites
+
+- GNU Autotools
+- OpenGL 3.0
+- C++11 compiler
+- Boost
+- GLEW
+- SDL2
+- GLM
+- GL
+- SOIL
+
+On Fedora 20 or later the libraries can all be installed by using the command (as root):
+
+> $ yum install boost-* glew-devel SDL2_* glm-devel SOIL-devel SOIL.x86_64 GL
+
+#Prerequisites for build commands
+To be able to use the 'autoreconf -i' command you must have GNU autotools installed.
+To install use the command (as root):
+
+> $ yum install autoconf automake
+
+Libtool will also need to be installed:
+
+> $ yum install libtool
+
+To install the gcc C++11 compiler support use the command (as root):
+
+> $ yum install gcc-c++.x86_64
+
+#Building
+After cloning the source code, change to the directory where the source code is and enter the following commands:
+
+> $ autoreconf -i
+> $ ./configure
+> $ make
+
+#Running
+To build the program enter the command:
+
+> $ ./assignment
+
+
 ####Aim
 The aim of this project is to learn how to apply textures and lighting to a 3D scene. This will consist of rendering a 
 3D scene of the Earth rotating realistically with the Moon in orbit around it. At the very least the Earth and Moon will 

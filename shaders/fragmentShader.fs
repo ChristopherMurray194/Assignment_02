@@ -1,4 +1,4 @@
-#version 150
+#version 130
 
 uniform sampler2D texSampler;
 uniform vec4 As;
@@ -10,13 +10,11 @@ uniform float shininess_material;
 uniform vec4 spec;
 uniform vec4 specular_material;
 
-in Data {
-	vec3 norm;
-	vec3 eyeVec;
-	vec3 lightDirection;
-	vec2 texCoordinates;
-	vec2 xy_position;
-} DataIn;
+in vec3 norm;
+in vec3 eyeVec;
+in vec3 lightDirection;
+in vec2 texCoordinates;
+in vec2 xy_position;
 
 out vec4 color;
 
@@ -35,8 +33,8 @@ void main()
 	(As * ambient_material) + 
 	(ambient * ambient_material);
 	
-	vec3 N = normalize(DataIn.norm);
-	vec3 L = normalize(DataIn.lightDirection);
+	vec3 N = normalize(norm);
+	vec3 L = normalize(lightDirection);
 	
 	float lambertTerm = dot(N, L);
 	
@@ -46,7 +44,7 @@ void main()
 						* diffuse_material 
 						* lambertTerm;
 					  			
-		vec3 E = normalize(DataIn.eyeVec);
+		vec3 E = normalize(eyeVec);
 		vec3 R = reflect(-L, N);
 		float specular = pow(max(dot(R,E), 0.0),
 						 shininess_material);
@@ -56,7 +54,7 @@ void main()
 						* specular;
 	}
 	
-	vec2 texCoord = DataIn.texCoordinates;
-	texCoord.x = (PI + atan(DataIn.xy_position.y, DataIn.xy_position.x)) / (2 * PI);
+	vec2 texCoord = texCoordinates;
+	texCoord.x = (PI + atan(xy_position.y, xy_position.x)) / (2 * PI);
 	color = finalColor * texture2D(texSampler, texCoord);
 }

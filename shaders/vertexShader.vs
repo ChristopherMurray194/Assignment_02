@@ -1,4 +1,4 @@
-#version 150
+#version 130
 
 in vec3 position;
 in vec3 normals;
@@ -9,13 +9,11 @@ uniform mat4 model_matrix;
 
 uniform vec4 lightPosition;
 
-out Data {
-	vec3 norm;
-	vec3 eyeVec;
-	vec3 lightDirection;
-	vec2 texCoordinates;
-	vec2 xy_position;
-} DataOut;
+out vec3 norm;					
+out vec3 lightDirection;		
+out vec2 texCoordinates;
+out vec3 eyeVec;
+out vec2 xy_position;
 
 mat4 projection(
 	float angle_of_view_y,
@@ -64,16 +62,16 @@ mat4 rotate_y(float theta)
 
 void main()
 { 
-	mat3 normal_matrix= mat3((transpose(inverse(camera * model_matrix))));	// Create the normal matrix
-	DataOut.norm = normal_matrix * normals;
+	mat3 normal_matrix= mat3((transpose(-(camera * model_matrix))));	// Create the normal matrix
+	norm = normal_matrix * normals;
 	
 	vec3 vVertex = vec3(mat3(camera * model_matrix) * position);
 	normalize(lightPosition);
-	DataOut.lightDirection = vec3(vec3(lightPosition) - vVertex);
-	DataOut.eyeVec = -vVertex;
+	lightDirection = vec3(vec3(lightPosition) - vVertex);
+	eyeVec = -vVertex;
 					
-	DataOut.xy_position = position.xy;
-	DataOut.texCoordinates = texCoords;
+	xy_position = position.xy;
+	texCoordinates = texCoords;
 	
 	gl_Position = projection(radians(45.0), 4.0/3.0, -0.1, -1000.0)
 					* camera 	// view matrix
